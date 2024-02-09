@@ -1,0 +1,22 @@
+* {
+  font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+}
+
+html {
+  border: 1px solid black;
+}
+
+.card-container {
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+}
+
+.card {
+  margin: 10px;
+  padding: 1.25rem;
+  text-align: center;
+  border: solid 2px black;
+  border-radius: 3px;
+  max-width: 120px;
+}

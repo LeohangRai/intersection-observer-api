@@ -1,0 +1,35 @@
+* {
+  font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+}
+
+html {
+  border: 1px solid black;
+}
+
+.card-container {
+  /* 
+    making the top and bottom margin values the same as the 'rootMargin' value in the IntersectionObserver
+    so that the top and bottom divs from this container intersect with the viewport at least once
+  */
+  margin: 200px 0px;
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+}
+
+.card {
+  margin: 10px;
+  padding: 1.25rem;
+  text-align: center;
+  border: solid 2px black;
+  border-radius: 3px;
+  max-width: 120px;
+  transform: translateX(100px);
+  opacity: 0;
+  transition: 150ms;
+}
+
+.show {
+  transform: translateX(0);
+  opacity: 1;
+}
