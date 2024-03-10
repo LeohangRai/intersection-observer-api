@@ -1,0 +1,100 @@
+# Intersection Observer API
+# Use cases
+- scroll based animations
+- infinite scrolling
+- lazy loading images
+
+
+# IMPORTANT NOTE:
+The intersection callback does not run only when the target element intersects with the view port but also when it transitions from intersecting to not-intersecting, meaning when it moves out from the view port.
+That is the reason why it is very crucial to check the 'entry.isIntersecting' property in our callback for the desired effect. if(entry.isInteresting) { // do something }
+Not checking the 'isIntersecting' property value and running our logic unconditionally may sometimes lead to infinite loops and undesired effects.
+
+
+NOTE:
+1. Use 'threshold' if you want to specify when to trigger the callback, at what percentage visibility of the target. But the target has to be visible. 
+
+2. Use 'rootMargin' if you want to trigger the callback even when the target is not visible on the actual viewport. You can also get the effect that the 'threshold' provides using the 'rootMargin' option by providing a negative value. You will be able to expand the viewport by specifying a positive rootMarin, so you can trigger the observer callback even before the target is visible in our real viewport. Or you can give a negative value to the rootMargin, which will shrink the viewport and can delay the observer callback triggering. Even when the target is visible to us, it may still not be intersecting with the now shrunk viewport.
+
+NOTE:
+The rootMargin property can be used to either expand or shrink the viewport by giving it either positive or negative margins values
+// instead of thinking of the viewport actually being expanded or shrunk by the 'rootMargin' property, it is more accurate to describe them as offset values but 'expand' and 'shrink' sound more intuitive
+
+
+# IntersectionObserverEntry
+IntersectionObserverEntry is an interface of the 'Intersection Observer API' that describes the intersection between the target element and its root container at a specific moment of transition.
+Instances of IntersectionObserverEntry are passed as parameters to the IntersectionObserver callback as 'entries'.
+
+# Properties of IntersectionObserverEntry
+IMPORTANT: 
+All of these properties are readonly.
+
+1. isIntersecting
+NOTE: most probably the only property that you will be concerned with
+- a boolean value which is true if the target element intersects with the intersection observer's root
+- a value of true implies a transition into a state of intersecting
+-a value of false implies a transition from intersecting to not-intersecting
+
+2. target
+- the element whose intersection with the root changed
+
+
+// Less important properties
+3. intersectionRect
+- returns a DOMRectReadOnly representing the target's visible area.
+
+4. boundingClientRect
+- returns the bound rectangle of the target element as a DOMRectReadOnly.
+
+5. intersectionRatio
+- returns a ratio of the intersectionRect to the boundingClientRect
+- 1 means 100% of the target is intersecting with the root. (meaning, the target is fully visible in the root)
+
+6. rootBounds
+7. time
+
+
+
+IntersectionObserver
+
+The 'entries' array passed as a parameter to the IntersectionObserver callback is an array of all the elements that we are observing for intersection with the root.
+
+1. observe()
+- it watches whether the target(s) has changed its intersection with the root or not
+- if there is an intersection, the callback specified during the initialization of the IntersectionObserver object will be called.
+
+
+2. unobserve()
+- instructs the IntersectionObserver to stop observing the specified target element
+
+
+threshold
+- 
+
+rootMargin
+- a string with syntax similar to that of the CSS 'margin' property
+- acts as the offset for the sides of the root element's bounding box
+- defaults to '0px 0px 0px 0px'
+- a positive value expands the root and hence may cause intersection to occur before the target element is actually visible
+- a negative value shrinks the root and hence may cause intersection to not occur even after certain portion of the target element is actually visible 
+- each side of the rectangle represented by 'rootMargin' is added to the corresponding side in the root element's (which is the viewport by default) bounding box before the intersection test is performed.
+
+root
+- used to specify the Element or Document whose bounds are treated as the bounding box of the viewport for the elment which is the observer's target.
+- if the value is null or no value is provided, the bounds of the actual document viewport are used.
+
+
+# IMPORTANT NOTE
+The rootMargin options is very useful for pre-loading images or contents for your application. You can start fetching the image or contents before even the bottom content of your page becomes visible to the viewer by specifying a positive rootMargin value.
+Specifying a positive rootMargin value means that your root element (i.e. the viewport by default) will expand and the intersection will trigger even before the bottom element is visible to the users.
+
+
+
+
+
+
+
+
+
+ 
+

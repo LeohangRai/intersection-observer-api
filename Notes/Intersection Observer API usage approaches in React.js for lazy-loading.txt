@@ -1,0 +1,60 @@
+# Intersection Observer API usage approaches in React.js for lazy-loading
+
+1. Use the same Intersection Observer instance, dynamically observe the new 'last element' and unobserve the previous 'last element'
+
+const intersectionObserver = useRef(
+  new IntersectionObserver((entries, observer) => {
+    if (entries[0].isIntersecting) {
+      setOffset(offset + 12);
+      observer.unobserve(entries[0].target);
+    }
+  })
+);
+
+const setIntersectionObserver = useCallback(
+  (node: HTMLDivElement) => {
+    if (loading || !node) return;
+    intersectionObserver.current.observe(node);
+  },
+  [loading]
+);
+
+
+
+2. Disconnect the previous Intersection Observer, and instantiate a new Intersection Observer
+
+const observer = useRef<null | IntersectionObserver>(null);
+const setIntersectionObserver = useCallback(
+  (node: HTMLDivElement) => {
+    if (loading) return;
+    if (observer.current) observer.current.disconnect();
+    observer.current = new IntersectionObserver((entries) => {
+      if (entries[0].isIntersecting) {
+        setOffset(offset + 12);
+        console.log("intersecting");
+      }
+    });
+    if (node) observer.current.observe(node);
+  },
+  [loading]
+);
+
+
+
+# Differences between the two approaches
+1. Approach 1
+- Unobserves the previous last element and continues to use the same observer instance (intersectionObserver).
+- Avoids creating a new 'IntersectionObserver' instance every time the last element changes.
+- This approach reuses the same observer instance for all observations, unobserving the previous last element when a new one is observed. It maintains the same observer throughout the component's lifecycle.
+
+
+2. Approach 2
+- Disconnects the observer every time the last element changes (setIntersectionObserver callback).
+- Creates a new 'IntersectionObserver' instance every time the last element changes.
+- This approach ensures that each observer is created fresh and only observes the current last element. It disconnects from the previous last element, preventing unnecessary observations.
+
+
+# Performance:
+Approach 2 may have slightly higher overhead due to creating new observer instances frequently.
+Approach 1 may be slightly more efficient in terms of memory usage since it reuses the same observer instance.
+
